@@ -144,7 +144,10 @@ class CogGenerator(Redirectable):
         cog.cogmodule.error = self.error
 
         self.outstring = ''
+        oldStdout = sys.stdout
+        sys.stdout = self
         eval(code, globals)
+        sys.stdout = oldStdout
 
         # We need to make sure that the last line in the output
         # ends with a newline, or it will be joined to the
@@ -185,6 +188,8 @@ class CogGenerator(Redirectable):
         """
         raise CogGeneratedError(msg)
 
+    def write(self, message):
+        self.out(message)
 
 class NumberedFileReader:
     """ A decorator for files that counts the readline()'s called.
